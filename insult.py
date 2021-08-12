@@ -32,20 +32,3 @@ def add_insult(insult):
         with open(INSULT_FILE, 'a') as f:
             f.write(insult.strip())
             f.write('\n')
-
-
-def main():
-    insults = []
-    i = 0
-    while i < 2000:
-        insult = get_insult()
-        print(str(i) + ": " + insult)
-        if insult not in insults:
-            insults.append(insult)
-            add_insult(insult)
-        i += 1
-        time.sleep(1)
-
-
-if __name__ == '__main__':
-    main()
