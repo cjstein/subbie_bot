@@ -51,6 +51,13 @@ def bot_loop():
                 except Exception as e:
                     utility.chat(s, 'There was an error adding the insult')
                     print(e)
+            if "vibing at" in message.strip() and username.lower() == "streamlabs":
+                percent = int(message.split("at ")[0][:-1])
+                if percent < 51:
+                    chat_out = insult.get_insult()
+                    utility.chat(s, chat_out)
+
+
     time.sleep(1 / config.RATE)
 
 
