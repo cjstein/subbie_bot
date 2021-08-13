@@ -52,7 +52,7 @@ def bot_loop():
                     utility.chat(s, 'There was an error adding the insult')
                     print(e)
             if "vibing at" in message.strip() and username.lower() == "streamlabs":
-                percent = int(message.split("at ")[1][:-1])
+                percent = int(message.split("at ")[1][:-1].strip())
                 message = "Because you're vibin so low, you get an insult:\n{}".format(insult.get_insult())
                 if percent < 51:
                     utility.chat(s, message)
