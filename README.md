@@ -17,5 +17,6 @@ For an insult command: You will also need to create an `insults.txt` file with a
 ### Usage
 Once everything is setup and running, users in the twitch chat can use the current commands:
 
--`!insult` - This picks a random line from the `insults.txt` file
--`!addinsult` - This adds a new insult to the `insults.txt` file
+
+* `!insult`  his picks a random line from the `insults.txt` file
+* `!addinsult` This adds a new insult to the `insults.txt` file
