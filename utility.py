@@ -1,5 +1,8 @@
+import re
 import config
-import socket
+
+COMMAND_PATTERN = r'!{1}(?P<command>[\w]+)'
+USER_PATTERN = r'@{1}(?P<user>[\w]+)'
 
 
 def chat(sock, msg):
@@ -32,3 +35,28 @@ def timeout(sock, user, secs=600):
     """
     chat(sock, ".timeout {}".format(user, secs))
 
+
+def find_commands(message: str) -> list:
+    """
+    This functions takes the message and returns a list of found commands
+    Args:
+        message: string; message in twitch chat
+
+    Returns: list of commands, does not include the "!"
+    """
+    p = re.compile(COMMAND_PATTERN)
+    m = p.findall(message)
+    return list(m)
+
+
+def find_users(message: str) -> list:
+    """
+    This functions takes the message and returns a list of found users
+    Args:
+        message: string; message in twitch chat
+
+    Returns: list of users, does not include the "@"
+    """
+    p = re.compile(USER_PATTERN)
+    m = p.findall(message)
+    return list(m)
