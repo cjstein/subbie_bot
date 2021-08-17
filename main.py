@@ -5,6 +5,7 @@ import socket
 import time
 import re
 import insult
+import json
 
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
 
@@ -22,6 +23,8 @@ except Exception as e:
 
 
 def bot_loop():
+    with open(config.VIBE_JSON, 'r') as f:
+        vibing_stats = json.load(f)
     while connected:
         response = s.recv(1024).decode("utf-8")
         if response == "PING :tmi.twitch.tv\r\n":
@@ -30,6 +33,7 @@ def bot_loop():
         else:
             username = re.search(r"\w+", response).group(0)
             message = CHAT_MSG.sub("", response)
+            print(response)
             print(username)
             print(message, "\n")
             for pattern in config.BAN_PAT:
@@ -38,10 +42,10 @@ def bot_loop():
                     break
             if message.strip().lower() == "!vibe" and username.lower() == "subzeb":
                 utility.chat(s, "Subbie is always vibing at 100%")
-            if message.strip().lower() == "!insult":
-                chat_out = insult.get_insult()
-                print(chat_out)
-                utility.chat(s, chat_out)
+            # if message.strip().lower() == "!insult":
+            #    chat_out = insult.get_insult()
+            #    print(chat_out)
+            #    utility.chat(s, chat_out)
             if message.strip().lower().startswith("!addinsult"):
                 try:
                     addition = message[11:]
@@ -52,11 +56,39 @@ def bot_loop():
                     utility.chat(s, 'There was an error adding the insult')
                     print(e)
             if "vibing at" in message.strip() and username.lower() == "streamlabs":
+                chatter = message.split(" is")[0].strip().lower()
                 percent = int(message.split("at ")[1].strip()[:-1])
-                message = "Because you're vibin so low, you get an insult: {}".format(insult.get_insult())
+                reply = "Because you're vibin so low, you get an insult: {}".format(insult.get_insult())
                 if percent < 51:
-                    utility.chat(s, message)
-
+                    utility.chat(s, reply)
+                if chatter not in vibing_stats.keys():
+                    vibing_stats[chatter] = {
+                        'vibe_values': [percent],
+                        }
+                else:
+                    vibing_stats[chatter]['vibe_values'].append(percent)
+                with open(config.VIBE_JSON, 'w') as f:
+                    json.dump(vibing_stats, f)
+            if message.strip().lower().startswith("!vibestats"):
+                print(vibing_stats)
+                try:
+                    print(username)
+                    chatter = vibing_stats[username.lower().strip()]
+                    print('Chatter: {}'.format(chatter))
+                    print(chatter['vibe_values'])
+                    num_vibes = len(chatter['vibe_values'])
+                    print(num_vibes)
+                    highest = max(chatter['vibe_values'])
+                    print(highest)
+                    lowest = min(chatter['vibe_values'])
+                    print(lowest)
+                    avg = sum(chatter['vibe_values']) / num_vibes
+                    print(avg)
+                    reply = '{} - Number of vibes: {} - Highest: {} - Lowest: {} - Average: {}'.format(username, num_vibes, highest, lowest, round(avg, 2))
+                    print(reply)
+                    utility.chat(s, reply)
+                except KeyError:
+                    utility.chat(s,'You need to vibe first')
     time.sleep(1 / config.RATE)
 
 
