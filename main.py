@@ -6,6 +6,7 @@ import time
 import re
 import insult
 import json
+import commands
 
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
 
@@ -40,12 +41,10 @@ def bot_loop():
                 if re.match(pattern, message):
                     utility.ban(s, username)
                     break
+            commands_to_execute = utility.find_commands(message)
+            users_to_reference = utility.find_users(message)
             if message.strip().lower() == "!vibe" and username.lower() == "subzeb":
                 utility.chat(s, "Subbie is always vibing at 100%")
-            # if message.strip().lower() == "!insult":
-            #    chat_out = insult.get_insult()
-            #    print(chat_out)
-            #    utility.chat(s, chat_out)
             if message.strip().lower().startswith("!addinsult"):
                 try:
                     addition = message[11:]

@@ -1,5 +1,7 @@
 import re
 import config
+import inspect
+import commands
 
 COMMAND_PATTERN = r'!{1}(?P<command>[\w]+)'
 USER_PATTERN = r'@{1}(?P<user>[\w]+)'
@@ -60,3 +62,16 @@ def find_users(message: str) -> list:
     p = re.compile(USER_PATTERN)
     m = p.findall(message)
     return list(m)
+
+
+def is_mod_function(mod, func):
+    return inspect.isfunction(func) and inspect.getmodule(func) == mod
+
+
+def list_functions(mod):
+    return [func.__name__ for func in mod.__dict__.values()
+            if is_mod_function(mod, func)]
+
+
+def get_commands():
+    return list_functions(commands)
