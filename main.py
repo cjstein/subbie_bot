@@ -39,9 +39,9 @@ def bot_loop():  # sourcery no-metrics
             users_to_reference = utility.find_users(message)
             stripped_message = str(message)
             for i in commands_to_execute:
-                stripped_message = stripped_message.replace(f'!{i}', '')
+                stripped_message = stripped_message.replace('!{}'.format(i), '')
             for i in users_to_reference:
-                stripped_message = stripped_message.replace(f'@{i}', '')
+                stripped_message = stripped_message.replace('@{}'.format(i), '')
             # Get the list of commands
             commands_allowed = utility.get_commands()
             for command in commands_to_execute:

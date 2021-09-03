@@ -19,10 +19,10 @@ def addinsult(insult_to_add, *args, **kwargs):
 def test_command(message_to_print, *args, **kwargs):
     print(message_to_print)
     for k, v in kwargs.items():
-        print(f'{k}: {v}')
+        print('{}: {}'.format(k,v))
 
     for user in kwargs['users']:
-        print(f'@{user} has been tested')
+        print('@{} has been tested'.format(user))
 
 
 def vibe(*args, **kwargs):
