@@ -52,7 +52,7 @@ def vibestats(*args, **kwargs):
     else:
         for user in kwargs['users']:
             try:
-                chatter = vibing_stats[user]
+                chatter = vibing_stats[user.lower()]
                 num_vibes = len(chatter['vibe_values'])
                 highest = max(chatter['vibe_values'])
                 lowest = min(chatter['vibe_values'])
