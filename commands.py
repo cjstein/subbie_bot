@@ -1,11 +1,27 @@
 """
-This file can be used to add commands.  To create a new command, add it exactly as wanted in the chat then
-have it take care of everything including sending another chat.
+This file can be used to add commands.  To create a new command, add a function with a name exactly as wanted in the
+chat then have it take care of everything including sending another chat.
+The message that has all the commands and users removed is the first argument for each command
+Here are the kwargs that are sent to every command:
+sock : the socket used for chat.  How to send a chat reply use this: utility.chat(kwargs['sock'], reply)
+users: a list of users that were found in the original message.
+sender: this is who sent the original message
 
 """
 import insult
 import utility
+import time
+import config
 
+
+def _command_template(stripped_message, *args, **kwargs):
+    # This is a template function to create all commands, change the '_command_template'
+    # to the command you want the bot to respond to in chat.
+    users = kwargs['users']
+    sender = kwargs['sender']
+    # add logic, etc. here
+    reply = 'make some message to respond with'
+    utility.chat(kwargs['sock'], reply)
 
 def addinsult(insult_to_add, *args, **kwargs):
     try:
@@ -65,5 +81,8 @@ def vibestats(*args, **kwargs):
                     round(avg, 2),
                 )
                 utility.chat(kwargs['sock'], reply)
+                time.sleep(1 / config.RATE)
             except KeyError:
                 utility.chat(kwargs['sock'], '{} need to vibe first'.format(user))
+
+def club100(*args, **kwargs):
