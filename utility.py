@@ -2,6 +2,8 @@ import re
 import config
 import inspect
 import commands
+import insult
+import json
 
 COMMAND_PATTERN = r'!{1}(?P<command>[\w]+)'
 USER_PATTERN = r'@{1}(?P<user>[\w]+)'
@@ -69,9 +71,31 @@ def is_mod_function(mod, func):
 
 
 def list_functions(mod):
-    return [func.__name__ for func in mod.__dict__.values()
-            if is_mod_function(mod, func)]
+    return [func.__name__ for func in mod.__dict__.values() if is_mod_function(mod, func)]
 
 
 def get_commands():
     return list_functions(commands)
+
+
+def get_vibe_stats():
+    with open(config.VIBE_JSON, 'r') as f:
+        vibing_stats = json.load(f)
+    return vibing_stats
+
+
+def vibing_stats_collection(message, *args, **kwargs):
+    vibing_stats = get_vibe_stats()
+    chatter = message.split(" is")[0].strip().lower()
+    percent = int(message.split("at ")[1].strip()[:-1])
+    if percent < 51:
+        reply = "Because you're vibin' so low, you get an insult: {}".format(insult.get_insult())
+        chat(kwargs['sock'], reply)
+    if chatter not in vibing_stats.keys():
+        vibing_stats[chatter] = {
+            'vibe_values': [percent],
+        }
+    else:
+        vibing_stats[chatter]['vibe_values'].append(percent)
+    with open(config.VIBE_JSON, 'w') as f:
+        json.dump(vibing_stats, f)
