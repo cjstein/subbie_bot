@@ -85,4 +85,35 @@ def vibestats(*args, **kwargs):
             except KeyError:
                 utility.chat(kwargs['sock'], '{} need to vibe first'.format(user))
 
+
 def club100(*args, **kwargs):
+    vibing_stats = utility.get_vibe_stats()
+    users_with_100 = [
+        user
+        for user, vibe_values in vibing_stats.items()
+        if max(vibe_values) == 100
+    ]
+    reply = 'The following users are in the 100 club: {}'.format(', '.join(users_with_100))
+    utility.chat(kwargs['sock'], reply)
+
+
+def club0(*args, **kwargs):
+    vibing_stats = utility.get_vibe_stats()
+    users_with_0 = [
+        user
+        for user, vibe_values in vibing_stats.items()
+        if min(vibe_values) == 0
+    ]
+    reply = 'The following users are in the 0 club: {}'.format(', '.join(users_with_0))
+    utility.chat(kwargs['sock'], reply)
+
+
+def club69(*args, **kwargs):
+    vibing_stats = utility.get_vibe_stats()
+    users_with_69 = [
+        user
+        for user, vibe_values in vibing_stats.items()
+        if 69 in vibe_values
+    ]
+    reply = 'The following users are in the 69 club: {}'.format(', '.join(users_with_69))
+    utility.chat(kwargs['sock'], reply)
