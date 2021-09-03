@@ -32,13 +32,38 @@ def vibe(*args, **kwargs):
 
 def vibestats(*args, **kwargs):
     vibing_stats = utility.get_vibe_stats()
-    try:
-        chatter = vibing_stats[kwargs['sender']]
-        num_vibes = len(chatter['vibe_values'])
-        highest = max(chatter['vibe_values'])
-        lowest = min(chatter['vibe_values'])
-        avg = sum(chatter['vibe_values']) / num_vibes
-        reply = '{} - Number of vibes: {} - Highest: {} - Lowest: {} - Average: {}'.format(username, num_vibes, highest, lowest, round(avg, 2))
-        utility.chat(kwargs['sock'], reply)
-    except KeyError:
-        utility.chat(kwargs['sock'], 'You need to vibe first')
+    if not kwargs['users']:
+        try:
+            chatter = vibing_stats[kwargs['sender']]
+            num_vibes = len(chatter['vibe_values'])
+            highest = max(chatter['vibe_values'])
+            lowest = min(chatter['vibe_values'])
+            avg = sum(chatter['vibe_values']) / num_vibes
+            reply = '{} - Number of vibes: {} - Highest: {} - Lowest: {} - Average: {}'.format(
+                kwargs['sender'],
+                num_vibes,
+                highest,
+                lowest,
+                round(avg, 2),
+            )
+            utility.chat(kwargs['sock'], reply)
+        except KeyError:
+            utility.chat(kwargs['sock'], 'You need to vibe first')
+    else:
+        for user in kwargs['users']:
+            try:
+                chatter = vibing_stats[user]
+                num_vibes = len(chatter['vibe_values'])
+                highest = max(chatter['vibe_values'])
+                lowest = min(chatter['vibe_values'])
+                avg = sum(chatter['vibe_values']) / num_vibes
+                reply = '{} - Number of vibes: {} - Highest: {} - Lowest: {} - Average: {}'.format(
+                    user,
+                    num_vibes,
+                    highest,
+                    lowest,
+                    round(avg, 2),
+                )
+                utility.chat(kwargs['sock'], reply)
+            except KeyError:
+                utility.chat(kwargs['sock'], '{} need to vibe first'.format(user))
